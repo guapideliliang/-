@@ -3,6 +3,39 @@
 WorkerManager::WorkerManager() {
 	this->m_WorkerNum=0;//初始化
 	this->m_WorkerArray=NULL;
+	ifstream ifs;
+	ifs.open(FILENAME, ios::in);
+	if (!ifs.is_open())//文件不存在
+	{
+		cout << "文件不存在" << endl;
+		this->m_WorkerNum = 0;//初始化人数
+		this->m_WorkerFileEmpty = true;//设定文件状态
+		this->m_WorkerArray=NULL;//初始化数组
+		ifs.close();
+		return;
+	}
+	char ch;
+	ifs >> ch;
+	if (ifs.eof())
+	{
+		cout << "文件为空" << endl;
+		this->m_WorkerNum = 0;//初始化人数
+		this->m_WorkerFileEmpty = true;//设定文件状态
+		this->m_WorkerArray = NULL;//初始化数组
+		ifs.close();
+		return;
+	}
+	int num = this->m_GetNum();//获取人数
+	cout << "职工数为： " << num << endl;//显示人数
+	this->m_WorkerNum = num;//更新人数
+	this->m_WorkerArray = new Worker * [this->m_WorkerNum];//根据人数初始化数组
+	//初始化职工
+	this->m_InitWorker();
+	////测试代码
+	//for (int i = 0; i < m_WorkerNum; i++)
+	//{
+	//	cout << this->m_WorkerArray[i]->m_ID << this->m_WorkerArray[i]->m_Name << this->m_WorkerArray[i]->m_Post << endl;
+	//}
 }
 void WorkerManager:: Show_Menu() {
 	cout << "******************" << endl;
@@ -28,6 +61,84 @@ void WorkerManager::ExitSystem()
 
 WorkerManager::~WorkerManager() {
 
+	if (this->m_WorkerArray != NULL)
+	{
+		delete[] this->m_WorkerArray;
+		this->m_WorkerArray = NULL;
+	}
+}
+
+void WorkerManager::ShowWorker()
+{
+	if (this->m_WorkerFileEmpty)
+	{
+		cout << "文件不存在或为空" << endl;
+		return;
+	}
+	else {
+		for (int i = 0; i < m_WorkerNum; i++)
+		{
+			this->m_WorkerArray[i]->ShowInfo();
+		}
+	}
+	system("pause");
+	system("cls");
+
+}
+
+void WorkerManager::m_InitWorker()
+{
+	ifstream ifs;
+	ifs.open(FILENAME, ios::in);
+	int id;
+	string name;
+	int post;
+	int index = 0;
+	while (ifs >> id && ifs >> name && ifs >> post)
+	{
+		Worker* worker = NULL;
+		//根据不同的部门编号创建对象
+		switch (post)
+		{
+		case 1:worker = new OrdinaryEmployee(id, name, post); break;//普通职工
+		case 2:worker = new Manger(id, name, post); break;//经理
+		case 3:worker = new Boss(id, name, post); break;//老板
+		}
+		this->m_WorkerArray[index] = worker;
+		index++;
+	}
+	ifs.close();
+	
+}
+
+int WorkerManager::m_GetNum()
+{
+	ifstream ifs;
+	ifs.open(FILENAME, ios::in);
+	int ID;
+	string name;
+	int post;
+
+	int num = 0;
+	while (ifs>>ID&&ifs>>name&&ifs>>post)
+	{
+		num++;
+	}
+	ifs.close();
+	return num;
+}
+
+void WorkerManager::Save()
+{
+	ofstream ofs;
+	ofs.open(FILENAME, ios::out);
+	for (int i = 0; i < m_WorkerNum; i++)
+	{
+		ofs << this->m_WorkerArray[i]->m_ID << " "
+			<< this->m_WorkerArray[i]->m_Name << " "
+			<< this->m_WorkerArray[i]->m_Post << endl;
+	}
+	ofs.close();
 }
 
 void WorkerManager::Add_Worker()
@@ -80,6 +191,7 @@ void WorkerManager::Add_Worker()
 		this->m_WorkerNum = newSize;
 		//提示添加成功
 		cout << "成功添加" <<addworker<<" 名新职工" << endl;
+		this->Save();
 	}
 	else
 	{

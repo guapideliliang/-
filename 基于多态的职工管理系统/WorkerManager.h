@@ -7,6 +7,7 @@ using namespace std;//使用标准命名空间
 #include"Boss.h"
 #include"Manger.h"
 #include"OrdinaryEmployee.h"
+#define FILENAME "worker.txt"//存储文件名
 class WorkerManager {
 public:
 	//构造函数
@@ -17,8 +18,18 @@ public:
 	void ExitSystem();
 	//析构函数
 	~WorkerManager();
+	//查看职工
+	void ShowWorker();
 	//职工总数
 	int m_WorkerNum;
+	//初始化职工
+	void m_InitWorker();
+	//获取文件中的人数
+	int m_GetNum();
+	//表示文件的状态，ture为空
+	bool m_WorkerFileEmpty;
+	//将数据保存到文件中
+	void Save();
 	//职工数组指针
 	Worker** m_WorkerArray;
 	//添加职工

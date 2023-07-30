@@ -24,7 +24,7 @@ int main() {
 		switch (select) {
 		case 0: a.ExitSystem(); break;//退出系统
 		case 1: a.Add_Worker(); break;//添加职工
-		case 2:  break;//显示职工
+		case 2: a.ShowWorker(); break;//显示职工
 		case 3:  break;//删除职工
 		case 4:  break;//修改职工
 		case 5:  break;//查找职工
