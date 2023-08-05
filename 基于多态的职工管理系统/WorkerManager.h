@@ -24,6 +24,18 @@ public:
 	int m_WorkerNum;
 	//初始化职工
 	void m_InitWorker();
+	//该职工是否存在。返回在数组中的位置
+	int IsExist(int id);
+	//修改信息
+	void Mod_Worker();
+	//删除职工
+	void DeleWorker();
+	//查找职工
+	void Find_Worker();
+	//将职工按编号排序
+	void Sort();
+	//清空文件
+	void Clean_File();
 	//获取文件中的人数
 	int m_GetNum();
 	//表示文件的状态，ture为空
